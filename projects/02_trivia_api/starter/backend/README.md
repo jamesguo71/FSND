@@ -66,17 +66,18 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
 9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
 
-REVIEW_COMMENT
-```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
+## API Documentation
 
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
+### Endpoints
+- GET '/categories'
+- GET '/questions'
+- DELETE '/questions/<question_id>'
+- POST '/questions'
+- GET '/categories/<category_id>/questions'
+- POST '/quizzes'
 
-GET '/categories'
+### Detailed Endpoints
+##### 1. GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
@@ -87,7 +88,198 @@ GET '/categories'
 '5' : "Entertainment",
 '6' : "Sports"}
 
+##### 2. GET '/questions'
+- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+- Fetches a list of paginated questions each represented as a dictionary, with keys `id`,`question`, `answer`, `category`, `difficulty`.
+- Request Arguments: `page` for specific page of questions.
+- Returns: An object with keys `categories` (explained above), `current_category`, `questions`(explained above), and `total_questions`. 
+- Sample response:
+
 ```
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": null, 
+  "questions": [
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Apollo 13", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 2, 
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
+    }, 
+    {
+      "answer": "Agra", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 15, 
+      "question": "The Taj Mahal is located in which Indian city?"
+    }
+  ], 
+  "total_questions": 18
+}
+```
+
+##### 3. DELETE '/questions/<question_id>'
+- Deletes a specific question by its id.
+- Request Arguments: None
+- Returns: an object with key `success` and value true.
+- Sample response:
+```
+{
+  "success": true
+}
+```
+
+##### 4. POST '/questions'
+- If searchTerm presented in POST json data, search for questions based on the searchTerm and return paginated questions
+- Creates a question based on the json data provided in the POST request
+- Request Arguments: 1. for searching, specifying `searchTerm`(case insensitive) 2. for creating, specifying the question's `question`, `answer`, `difficulty`, and `category`(category id)   
+- Returns: if searchTerm presented, returns an object with key:value pairs of `question`: a list of question objects, `current_category`:category_id, `success`:true, and `total_questions':number of total questions.
+- Returns: an object with key:value paris of `success`:true, `created`: id of the newly created question, and `total_questions`: number of total questions.
+- Sample Response 1:  
+```
+{
+  "current_category": [
+    5
+  ], 
+  "questions": [
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 17
+}
+```
+- Sample Response 2
+```
+{
+  "created": 32, 
+  "success": true, 
+  "total_questions": 18
+}
+
+```
+
+##### 5. GET '/categories/<category_id>/questions'
+- Get questions in the specified category.
+- Request Arguments: `page` for specific page of questions
+- Returns: An object of key:value pairs including `questions`: a list of question object, `current_category`: name of current category, `total_questions`: number of total questions.
+- Sample Response:
+```
+{
+  "current_category": "Science", 
+  "questions": [
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }
+  ], 
+  "total_questions": 3
+}
+```
+
+##### 6. POST '/quizzes'
+- Fetches a question for the next question in a quiz.
+- Request arguments: `previous_questions`, a list of previous questions' ids; `quiz_category`, a dict with `type` and `id` specifying the quiz's category. For all categories, set id = 0.
+- Returns: An object with a single key of question, and its value of a dict object with keys `id`, `question`, `answer`, `category`, and `difficulty` 
+- Sample Response:
+```
+{
+  "question": {
+    "answer": "Blood", 
+    "category": 1, 
+    "difficulty": 4, 
+    "id": 22, 
+    "question": "Hematology is a branch of medicine involving the study of what?"
+  }
+}
+```
+
 
 
 ## Testing

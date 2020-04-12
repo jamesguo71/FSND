@@ -8,7 +8,9 @@ DEBUG = True
 
 # Connect to the database
 
+database_name = "trivia"
+database_path = "postgres://{}/{}".format('localhost:5432', database_name)
 
 # TODO IMPLEMENT DATABASE URL
-SQLALCHEMY_DATABASE_URI = 'postgresql://james@localhost:5432/fyyur'
+SQLALCHEMY_DATABASE_URI = database_path
 SQLALCHEMY_TRACK_MODIFICATIONS = False
